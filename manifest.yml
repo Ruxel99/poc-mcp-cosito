@@ -1,0 +1,9 @@
+applications:
+  - name: panasa-mcp
+    memory: 128M
+    instances: 1
+    buildpacks:
+      - nodejs_buildpack
+    command: node src/server.js
+    env:
+      NODE_ENV: production
