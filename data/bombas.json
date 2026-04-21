@@ -1,0 +1,149 @@
+{
+  "routes": [
+    {
+      "id": "RUTA-BOM-M2-001",
+      "nombre": "Ruta Inspección Bombas Molino 2",
+      "molino": "Molino 2",
+      "turno": "Mañana",
+      "operario": "Federico",
+      "fecha": "2025-04-21",
+      "estado": "completada",
+      "bombas": [
+        {
+          "id": "BOM-001",
+          "tag": "P-201",
+          "descripcion": "Bomba agua proceso principal",
+          "ubicacion": "Sala de bombas - Nivel 1",
+          "inspecciones": [
+            { "parametro": "Presión succión", "valor": 2.4, "unidad": "bar", "min": 2.0, "max": 3.0, "estado": "OK" },
+            { "parametro": "Presión descarga", "valor": 8.1, "unidad": "bar", "min": 7.5, "max": 9.0, "estado": "OK" },
+            { "parametro": "Temperatura rodamiento", "valor": 52, "unidad": "°C", "min": 0, "max": 65, "estado": "OK" },
+            { "parametro": "Vibración", "valor": 4.2, "unidad": "mm/s", "min": 0, "max": 4.5, "estado": "OK" },
+            { "parametro": "Amperaje motor", "valor": 18.3, "unidad": "A", "min": 15, "max": 22, "estado": "OK" }
+          ],
+          "observaciones": "Sin novedades",
+          "foto": false
+        },
+        {
+          "id": "BOM-002",
+          "tag": "P-202",
+          "descripcion": "Bomba agua proceso secundaria",
+          "ubicacion": "Sala de bombas - Nivel 1",
+          "inspecciones": [
+            { "parametro": "Presión succión", "valor": 1.8, "unidad": "bar", "min": 2.0, "max": 3.0, "estado": "ALERTA" },
+            { "parametro": "Presión descarga", "valor": 7.9, "unidad": "bar", "min": 7.5, "max": 9.0, "estado": "OK" },
+            { "parametro": "Temperatura rodamiento", "valor": 71, "unidad": "°C", "min": 0, "max": 65, "estado": "FALLA" },
+            { "parametro": "Vibración", "valor": 3.8, "unidad": "mm/s", "min": 0, "max": 4.5, "estado": "OK" },
+            { "parametro": "Amperaje motor", "valor": 20.1, "unidad": "A", "min": 15, "max": 22, "estado": "OK" }
+          ],
+          "observaciones": "Temperatura rodamiento elevada. Requiere revisión de lubricación.",
+          "foto": true
+        },
+        {
+          "id": "BOM-003",
+          "tag": "P-203",
+          "descripcion": "Bomba tinta línea 1",
+          "ubicacion": "Área tintas - Nivel 2",
+          "inspecciones": [
+            { "parametro": "Presión succión", "valor": 2.2, "unidad": "bar", "min": 2.0, "max": 3.0, "estado": "OK" },
+            { "parametro": "Presión descarga", "valor": 8.4, "unidad": "bar", "min": 7.5, "max": 9.0, "estado": "OK" },
+            { "parametro": "Temperatura rodamiento", "valor": 48, "unidad": "°C", "min": 0, "max": 65, "estado": "OK" },
+            { "parametro": "Vibración", "valor": 2.1, "unidad": "mm/s", "min": 0, "max": 4.5, "estado": "OK" },
+            { "parametro": "Amperaje motor", "valor": 16.7, "unidad": "A", "min": 15, "max": 22, "estado": "OK" }
+          ],
+          "observaciones": "Sin novedades",
+          "foto": false
+        },
+        {
+          "id": "BOM-004",
+          "tag": "P-204",
+          "descripcion": "Bomba lubricación cilindros",
+          "ubicacion": "Sala de bombas - Nivel 1",
+          "inspecciones": [
+            { "parametro": "Presión succión", "valor": 2.6, "unidad": "bar", "min": 2.0, "max": 3.0, "estado": "OK" },
+            { "parametro": "Presión descarga", "valor": 9.3, "unidad": "bar", "min": 7.5, "max": 9.0, "estado": "ALERTA" },
+            { "parametro": "Temperatura rodamiento", "valor": 55, "unidad": "°C", "min": 0, "max": 65, "estado": "OK" },
+            { "parametro": "Vibración", "valor": 5.1, "unidad": "mm/s", "min": 0, "max": 4.5, "estado": "FALLA" },
+            { "parametro": "Amperaje motor", "valor": 21.5, "unidad": "A", "min": 15, "max": 22, "estado": "OK" }
+          ],
+          "observaciones": "Vibración fuera de rango. Posible desbalance en impulsor. Programar mantenimiento.",
+          "foto": true
+        }
+      ]
+    },
+    {
+      "id": "RUTA-BOM-M2-002",
+      "nombre": "Ruta Inspección Bombas Molino 2",
+      "molino": "Molino 2",
+      "turno": "Tarde",
+      "operario": "Federico",
+      "fecha": "2025-04-20",
+      "estado": "completada",
+      "bombas": [
+        {
+          "id": "BOM-001",
+          "tag": "P-201",
+          "descripcion": "Bomba agua proceso principal",
+          "ubicacion": "Sala de bombas - Nivel 1",
+          "inspecciones": [
+            { "parametro": "Presión succión", "valor": 2.5, "unidad": "bar", "min": 2.0, "max": 3.0, "estado": "OK" },
+            { "parametro": "Presión descarga", "valor": 8.0, "unidad": "bar", "min": 7.5, "max": 9.0, "estado": "OK" },
+            { "parametro": "Temperatura rodamiento", "valor": 49, "unidad": "°C", "min": 0, "max": 65, "estado": "OK" },
+            { "parametro": "Vibración", "valor": 3.9, "unidad": "mm/s", "min": 0, "max": 4.5, "estado": "OK" },
+            { "parametro": "Amperaje motor", "valor": 17.8, "unidad": "A", "min": 15, "max": 22, "estado": "OK" }
+          ],
+          "observaciones": "Sin novedades",
+          "foto": false
+        },
+        {
+          "id": "BOM-002",
+          "tag": "P-202",
+          "descripcion": "Bomba agua proceso secundaria",
+          "ubicacion": "Sala de bombas - Nivel 1",
+          "inspecciones": [
+            { "parametro": "Presión succión", "valor": 2.1, "unidad": "bar", "min": 2.0, "max": 3.0, "estado": "OK" },
+            { "parametro": "Presión descarga", "valor": 8.2, "unidad": "bar", "min": 7.5, "max": 9.0, "estado": "OK" },
+            { "parametro": "Temperatura rodamiento", "valor": 63, "unidad": "°C", "min": 0, "max": 65, "estado": "OK" },
+            { "parametro": "Vibración", "valor": 3.5, "unidad": "mm/s", "min": 0, "max": 4.5, "estado": "OK" },
+            { "parametro": "Amperaje motor", "valor": 19.2, "unidad": "A", "min": 15, "max": 22, "estado": "OK" }
+          ],
+          "observaciones": "Sin novedades",
+          "foto": false
+        },
+        {
+          "id": "BOM-003",
+          "tag": "P-203",
+          "descripcion": "Bomba tinta línea 1",
+          "ubicacion": "Área tintas - Nivel 2",
+          "inspecciones": [
+            { "parametro": "Presión succión", "valor": 2.3, "unidad": "bar", "min": 2.0, "max": 3.0, "estado": "OK" },
+            { "parametro": "Presión descarga", "valor": 8.1, "unidad": "bar", "min": 7.5, "max": 9.0, "estado": "OK" },
+            { "parametro": "Temperatura rodamiento", "valor": 46, "unidad": "°C", "min": 0, "max": 65, "estado": "OK" },
+            { "parametro": "Vibración", "valor": 2.3, "unidad": "mm/s", "min": 0, "max": 4.5, "estado": "OK" },
+            { "parametro": "Amperaje motor", "valor": 16.9, "unidad": "A", "min": 15, "max": 22, "estado": "OK" }
+          ],
+          "observaciones": "Sin novedades",
+          "foto": false
+        },
+        {
+          "id": "BOM-004",
+          "tag": "P-204",
+          "descripcion": "Bomba lubricación cilindros",
+          "ubicacion": "Sala de bombas - Nivel 1",
+          "inspecciones": [
+            { "parametro": "Presión succión", "valor": 2.4, "unidad": "bar", "min": 2.0, "max": 3.0, "estado": "OK" },
+            { "parametro": "Presión descarga", "valor": 8.8, "unidad": "bar", "min": 7.5, "max": 9.0, "estado": "OK" },
+            { "parametro": "Temperatura rodamiento", "valor": 53, "unidad": "°C", "min": 0, "max": 65, "estado": "OK" },
+            { "parametro": "Vibración", "valor": 4.0, "unidad": "mm/s", "min": 0, "max": 4.5, "estado": "OK" },
+            { "parametro": "Amperaje motor", "valor": 20.3, "unidad": "A", "min": 15, "max": 22, "estado": "OK" }
+          ],
+          "observaciones": "Sin novedades",
+          "foto": false
+        }
+      ]
+    }
+  ],
+  "operarios": [
+    { "id": "OP-001", "nombre": "Federico", "molino": "Molino 2", "turno_principal": "Mañana" }
+  ]
+}
