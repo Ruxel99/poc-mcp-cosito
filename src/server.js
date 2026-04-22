@@ -4,10 +4,8 @@ const { randomUUID } = require("crypto");
 const app = express();
 app.use(express.json());
 
-// ─── In-memory data ────────────────────────────────────────────────────────
 const data = require("../data/bombas.json");
 
-// ─── MCP Tool definitions ───────────────────────────────────────────────────
 const TOOLS = [
   {
     name: "get_pump_routes",
@@ -16,8 +14,14 @@ const TOOLS = [
     inputSchema: {
       type: "object",
       properties: {
-        fecha: { type: "string", description: "Filter by date (YYYY-MM-DD). Optional." },
-        turno: { type: "string", description: "Filter by shift: Mañana | Tarde. Optional." }
+        fecha: {
+          type: "string",
+          description: "Filter by date (YYYY-MM-DD). Optional."
+        },
+        turno: {
+          type: "string",
+          description: "Filter by shift: Manana | Tarde. Optional."
+        }
       },
       required: []
     }
@@ -29,7 +33,10 @@ const TOOLS = [
     inputSchema: {
       type: "object",
       properties: {
-        route_id: { type: "string", description: "Route ID, e.g. RUTA-BOM-M2-001" }
+        route_id: {
+          type: "string",
+          description: "Route ID, e.g. RUTA-BOM-M2-001"
+        }
       },
       required: ["route_id"]
     }
@@ -46,60 +53,125 @@ const TOOLS = [
   }
 ];
 
-// ─── Tool execution ─────────────────────────────────────────────────────────
+function summarizeRoute(route) {
+  return {
+    id: route.id,
+    nombre: route.nombre,
+    molino: route.molino,
+    turno: route.turno,
+    operario: route.operario,
+    fecha: route.fecha,
+    estado: route.estado,
+    total_bombas: route.bombas.length,
+    alertas: route.bombas
+      .flatMap((bomba) => bomba.inspecciones)
+      .filter((inspeccion) => inspeccion.estado === "ALERTA").length,
+    fallas: route.bombas
+      .flatMap((bomba) => bomba.inspecciones)
+      .filter((inspeccion) => inspeccion.estado === "FALLA").length
+  };
+}
+
+function getFilteredRoutes(filters = {}) {
+  let routes = data.routes;
+
+  if (filters.fecha) {
+    routes = routes.filter((route) => route.fecha === filters.fecha);
+  }
+
+  if (filters.turno) {
+    routes = routes.filter((route) => route.turno === filters.turno);
+  }
+
+  return routes;
+}
+
+function getFailuresSummary() {
+  const failures = [];
+
+  for (const route of data.routes) {
+    for (const bomba of route.bombas) {
+      const problemas = bomba.inspecciones.filter(
+        (inspeccion) => inspeccion.estado !== "OK"
+      );
+
+      if (problemas.length > 0) {
+        failures.push({
+          route_id: route.id,
+          fecha: route.fecha,
+          turno: route.turno,
+          operario: route.operario,
+          bomba_tag: bomba.tag,
+          bomba_descripcion: bomba.descripcion,
+          problemas,
+          observaciones: bomba.observaciones
+        });
+      }
+    }
+  }
+
+  return {
+    total_anomalias: failures.length,
+    detalle: failures
+  };
+}
+
 function executeTool(name, args) {
   if (name === "get_pump_routes") {
-    let routes = data.routes;
-    if (args.fecha) routes = routes.filter(r => r.fecha === args.fecha);
-    if (args.turno) routes = routes.filter(r => r.turno === args.turno);
-    return routes.map(r => ({
-      id: r.id,
-      molino: r.molino,
-      turno: r.turno,
-      operario: r.operario,
-      fecha: r.fecha,
-      estado: r.estado,
-      total_bombas: r.bombas.length,
-      alertas: r.bombas.flatMap(b => b.inspecciones).filter(i => i.estado === "ALERTA").length,
-      fallas: r.bombas.flatMap(b => b.inspecciones).filter(i => i.estado === "FALLA").length
-    }));
+    return getFilteredRoutes(args).map(summarizeRoute);
   }
 
   if (name === "get_route_detail") {
-    const route = data.routes.find(r => r.id === args.route_id);
-    if (!route) return { error: `Route ${args.route_id} not found` };
+    const route = data.routes.find((item) => item.id === args.route_id);
+
+    if (!route) {
+      return { error: `Route ${args.route_id} not found` };
+    }
+
     return route;
   }
 
   if (name === "get_failures_summary") {
-    const failures = [];
-    for (const route of data.routes) {
-      for (const bomba of route.bombas) {
-        const problemas = bomba.inspecciones.filter(i => i.estado !== "OK");
-        if (problemas.length > 0) {
-          failures.push({
-            route_id: route.id,
-            fecha: route.fecha,
-            turno: route.turno,
-            operario: route.operario,
-            bomba_tag: bomba.tag,
-            bomba_descripcion: bomba.descripcion,
-            problemas: problemas,
-            observaciones: bomba.observaciones
-          });
-        }
-      }
-    }
-    return { total_anomalias: failures.length, detalle: failures };
+    return getFailuresSummary();
   }
 
   return { error: `Unknown tool: ${name}` };
 }
 
-// ─── MCP Streamable HTTP endpoint ───────────────────────────────────────────
-// Joule Studio requires streamable HTTP transport on a single endpoint
+app.get("/", (req, res) => {
+  res.json({
+    service: "panasa-mcp",
+    status: "ok",
+    endpoints: {
+      health: "/health",
+      mcp: "/mcp",
+      routes: "/routes",
+      route_detail: "/routes/:route_id",
+      failures: "/failures"
+    }
+  });
+});
 
-const sessions = {};
+app.get("/routes", (req, res) => {
+  const routes = getFilteredRoutes(req.query).map(summarizeRoute);
+  res.json(routes);
+});
+
+app.get("/routes/:route_id", (req, res) => {
+  const route = data.routes.find((item) => item.id === req.params.route_id);
+
+  if (!route) {
+    return res.status(404).json({
+      error: `Route ${req.params.route_id} not found`
+    });
+  }
+
+  return res.json(route);
+});
+
+app.get("/failures", (req, res) => {
+  res.json(getFailuresSummary());
+});
 
 app.post("/mcp", (req, res) => {
   const sessionId = req.headers["mcp-session-id"] || randomUUID();
@@ -108,7 +180,6 @@ app.post("/mcp", (req, res) => {
 
   const body = req.body;
 
-  // Initialize / ping
   if (body.method === "initialize") {
     return res.json({
       jsonrpc: "2.0",
@@ -125,7 +196,6 @@ app.post("/mcp", (req, res) => {
     return res.status(204).end();
   }
 
-  // List tools
   if (body.method === "tools/list") {
     return res.json({
       jsonrpc: "2.0",
@@ -134,10 +204,10 @@ app.post("/mcp", (req, res) => {
     });
   }
 
-  // Call tool
   if (body.method === "tools/call") {
     const { name, arguments: args } = body.params;
     const result = executeTool(name, args || {});
+
     return res.json({
       jsonrpc: "2.0",
       id: body.id,
@@ -154,9 +224,11 @@ app.post("/mcp", (req, res) => {
   });
 });
 
-// ─── Health check ────────────────────────────────────────────────────────────
-app.get("/health", (req, res) => res.json({ status: "ok", service: "panasa-mcp" }));
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", service: "panasa-mcp" });
+});
 
-// ─── Start ───────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Panasa MCP server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Panasa MCP + REST server running on port ${PORT}`);
+});
